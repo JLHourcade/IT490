@@ -6,10 +6,26 @@ require_once('rabbitMQLib.inc');
 
 function doLogin($username,$password)
 {
-    // lookup username in databas
-    // check password
-    return true;
-    //return false if not valid
+	$db = mysqli_connect("localhost","admin","password","test");
+	mysqli_select_db($db, "test");
+	$s = "SELECT * FROM students WHERE username = '$username' AND password = '$password'";
+	$q = mysqli_query($db,$s);
+	echo $s;
+	$rowCount = mysqli_num_rows($q);
+	
+	if($rowCount == 1){
+		return "Congratz";
+	}
+	else
+	{
+		echo "FAILURE";
+		return "No no";
+	}
+	 
+	// check password
+	return "Congratz";
+    	return true;
+    	//return false if not valid
 }
 
 function requestProcessor($request)
@@ -32,9 +48,7 @@ function requestProcessor($request)
 
 $server = new rabbitMQServer("testRabbitMQ.ini","testServer");
 
-echo "testRabbitMQServer BEGIN".PHP_EOL;
 $server->process_requests('requestProcessor');
-echo "testRabbitMQServer END".PHP_EOL;
 exit();
 ?>
 
